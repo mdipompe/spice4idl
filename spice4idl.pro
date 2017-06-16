@@ -2,12 +2,17 @@
 ;  NAME:
 ;    spice4idl
 ;  PURPOSE:
-;    Cross-correlate healpix maps using PolSpice. Options
-;    to bin in ell as well.
+;    Cross-correlate healpix maps using PolSpice
+;    (http://www2.iap.fr/users/hivon/software/PolSpice/).
+;    Options to bin in ell as well.
 ;
 ;  USE:
 ;    spice4idl,[ell=ell,cls=cls,bins=bins,
 ;              binnedout=binnedout,polspice options]
+;
+;  NOTES:
+;    Need to set environment variable POLSPICE pointing to the "spice"
+;    excecutable
 ;
 ;  INPUT:
 ;
