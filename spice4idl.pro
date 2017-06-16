@@ -1,4 +1,36 @@
-PRO spice4idl,ell,cl,$
+;+
+;  NAME:
+;    spice4idl
+;  PURPOSE:
+;    Cross-correlate healpix maps using PolSpice. Options
+;    to bin in ell as well.
+;
+;  USE:
+;    spice4idl,[ell=ell,cls=cls,bins=bins,
+;              binnedout=binnedout,polspice options]
+;
+;  INPUT:
+;
+;  OPTIONAL INPUT:
+;    See PolSpice help for options (or run
+;        using spice4idl,/help
+;    ell - set to variable containing ell values (will be binned if
+;          bin keyword is set)
+;    cls - set to variable containing cl values (will be binned if bin
+;          keyword is set)
+;    bins - Set to bin PolSpice output. If set to a single value N,
+;           creates bins of N per dex. Can also be an array of bin
+;           edges.
+;    binnedout - set to file name to contained binned output
+;
+;  OUTPUT:
+;    See Polspice outputs
+;
+;  HISTORY:
+;    6-16-17 - Written - MAD (Dartmouth)
+;-
+PRO spice4idl,ell=ell,cls=cls,$
+              bins=bins,binnedout=binnedout,$
               about=about,$
               apodizesigma=apodizesigma,$
               apodizetype=apodizetype,$
@@ -211,7 +243,20 @@ PRO spice4idl,ell,cl,$
        
   spawn,cmd,/noshell
 
-  readcol,clfile,ell,cl,format='D'
+  IF keyword_set(bins) THEN BEGIN
+     readcol,clfile,ell_raw,cl_raw,format='D'
+     IF (n_elements(bins) EQ 1) THEN bin_edges=define_ell_bins(bins,nlmax)
+     IF (n_elements(bins) GT 1) THEN bin_edges=bins
+     bin_llcl,cl_raw,bin_edges,ell,cls,/uniform
+     IF keyword_set(binnedout) THEN BEGIN
+        openw,lun,binnedout,/get_lun
+        FOR i=0L,n_elements(cl)-1 DO printf,lun,ell[i],cl[i]
+        close,lun
+     ENDIF
+  ENDIF
+  
+  IF (~keyword_set(bins) AND (keyword_set(ell) OR keyword_set(cl))) THEN $
+     readcol,clfile,ell,cls,format='D'
   
   return
 END
