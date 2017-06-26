@@ -219,7 +219,7 @@ PRO spice4idl,ell=ell,cls=cls,$
        '-maskfile2',maskfile2,$
        '-maskfilep',maskfilep1,$
        '-maskfilep2',maskfilep2,$
-       '-nlmax',nlmax,$
+       '-nlmax',strtrim(nlmax,2),$
        '-noiseclfile',noiseclfile,$
        '-noisecorfile',noisecorfile,$
        '-normfac',normfac,$
@@ -255,7 +255,7 @@ PRO spice4idl,ell=ell,cls=cls,$
      bin_llcl,cl_raw,bin_edges,ell,cls,/uniform
      IF keyword_set(binnedout) THEN BEGIN
         openw,lun,binnedout,/get_lun
-        FOR i=0L,n_elements(cl)-1 DO printf,lun,ell[i],cl[i]
+        FOR i=0L,n_elements(cls)-1 DO printf,lun,ell[i],cls[i]
         close,lun
      ENDIF
   ENDIF
